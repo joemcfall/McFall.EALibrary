@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
 
-namespace McFall.EALibrary
+namespace McFall.EvAlg
 {
     [Serializable]
     public class Individual : ISerializable

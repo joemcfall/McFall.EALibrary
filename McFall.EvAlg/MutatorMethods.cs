@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace McFall.EALibrary
+namespace McFall.EvAlg
 {
     public static class MutatorMethods
     {
