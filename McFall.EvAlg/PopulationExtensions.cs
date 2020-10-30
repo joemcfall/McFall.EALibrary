@@ -28,7 +28,7 @@ namespace McFall.EvAlg
                 inds = new List<Individual>(individuals);
 
 
-
+            Task[] tasks = new Task[children];
             for (int i = 0; i < children; i++)
             {
                 //select parents
@@ -37,8 +37,11 @@ namespace McFall.EvAlg
                 var child = Crossover(parents);
                 child.Mutate();
                 inds.Add(child);
-                Individual.CalculateFitness(child);
+                
+                tasks[i] = Task.Factory.StartNew(() => Individual.CalculateFitness(child));
             }
+
+            Task.WaitAll(tasks);
 
             //cull and return
             return (from i in inds
@@ -70,7 +73,7 @@ namespace McFall.EvAlg
                         var aVal = Gene.GetValue(aGene);
                         var bVal = Gene.GetValue(bGene);
 
-                        object val = d.Method.Invoke(def, new object[] { aVal, bVal });
+                        object val = d.DynamicInvoke(aVal, bVal);
                         Gene.SetValue(kidGene, val);
                     }
                 }
