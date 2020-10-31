@@ -8,6 +8,17 @@ namespace McFall.EvAlg
 {
     public static class Numerical
     {
-        public static Random RNG = new Random();
+        [ThreadStatic]
+        static Random r = new Random();
+
+        public static Random RNG
+        {
+            get
+            {
+                if (r == null)
+                    r = new Random();
+                return r;
+            }
+        }
     }
 }

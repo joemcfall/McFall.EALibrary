@@ -28,8 +28,7 @@ namespace McFall.EvAlg
                 inds = new List<Individual>(individuals);
 
 
-            Task[] tasks = new Task[children];
-            for (int i = 0; i < children; i++)
+            var r = Parallel.For(0, children, i =>
             {
                 //select parents
                 var parents = parentSelector(individuals);
@@ -37,12 +36,11 @@ namespace McFall.EvAlg
                 var child = Crossover(parents);
                 child.Mutate();
                 inds.Add(child);
-                
-                tasks[i] = Task.Factory.StartNew(() => Individual.CalculateFitness(child));
-            }
 
-            Task.WaitAll(tasks);
+                Individual.CalculateFitness(child);
+            });
 
+            
             //cull and return
             return (from i in inds
                     orderby i.Fitness descending

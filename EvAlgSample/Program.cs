@@ -120,27 +120,25 @@ namespace EvAlgSample
             };
 
             //let's create a list of 500 individuals
-            var population = (from i in Enumerable.Range(1, 500)
+            var population = (from i in Enumerable.Range(1, 100)
                               select IndividualFactory.CreateIndividual(geneDefs)).ToList();
 
 
             //initialize all
-            List<Task> tasks = new List<Task>();
-            foreach (var ind in population)
+            Parallel.ForEach(population, ind =>
             {
                 ind.InitializeValues();
-                var t = Task.Factory.StartNew(() => Individual.CalculateFitness(ind));
-                tasks.Add(t);
-            }
+                Individual.CalculateFitness(ind);
+            });
 
-            Task.WaitAll(tasks.ToArray());
+            
 
             //Ok, time to evolve! Let's run this for 10000 generations
             foreach(var gen in Enumerable.Range(2, 20000))
             {
                 //stop if best fitness is 0
                 //create 20 children per generation, using weighted choice selection
-                population = population.Evolve(20, SelectionMethods.WeightedChoice).ToList();
+                population = population.Evolve(2, SelectionMethods.WeightedChoice).ToList();
 
                 var best = population.OrderByDescending(ind => ind.Fitness).First();
                 //Console.Clear();
